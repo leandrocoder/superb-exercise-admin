@@ -1,5 +1,5 @@
 <template>
-    <div class="settings">
+    <div class="settings" v-if="!loading">
         <div class="pageheader d-flex">
             <h1>Settings</h1>
             <v-spacer/>
@@ -29,6 +29,7 @@
 <script>
 export default {
     data: () => ({
+        loading: true,
         weekDayNames: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         hours: [],
         form: {
@@ -45,7 +46,7 @@ export default {
 
         let res = await this.$rest.get('/settings')
         this.form = res
-        console.log('res', res)
+        this.loading = false
 
     },
 

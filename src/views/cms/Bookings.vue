@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div class="page" v-if="!loading">
         <div class="pageheader d-flex">
             <!--
             <div>
@@ -35,12 +35,11 @@
         </div>
         <v-card class="elevation-1">
             <v-card-text>
-
-                <div class="d-flex listitem">
-                    <v-chip small class="mr-2">4</v-chip>
-                    <p class="mr-2">12/10/2021 14:00 - Leandro Carlos</p>
+                <div class="d-flex listitem" v-for="(item, index) in bookings" :key="item.id">
+                    <v-chip small class="mr-2">{{item.chairs}}</v-chip>
+                    <p class="mr-2">{{item.date}} {{item.hour}} - Leandro Carlos</p>
                     <v-spacer />
-                    <v-btn class="ml-2" small color="error">Remove</v-btn>
+                    <v-btn class="ml-2" small color="error" @click="remove(item)">Remove</v-btn>
                 </div>
 
             </v-card-text>
@@ -52,18 +51,28 @@
 
 export default {
     data: () => ({
+        loading: true,
         datePickerActive:false,
         date: null,
         dateFormatted: null,
+        bookings: []
     }),
     beforeMount() {
         this.date = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
         this.dateFormatted =  this.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10))
     },
-    mounted() {
+    async mounted() {
+        await this.loadData()
         //this.dateFormatted = this.parseDate(this.date)
     },
     methods: {
+
+        async loadData() {
+            this.loading = true
+            this.bookings = await this.$rest.get('/booking')
+            this.loading = false
+        },
+
         formatDate (date) {
             if (!date) return null
             const [year, month, day] = date.split('-')
@@ -74,6 +83,11 @@ export default {
             const [month, day, year] = date.split('/')
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
         },
+
+        async remove(item) {
+            let res = await this.$rest.del('/booking', item.id)
+            await this.loadData()
+        }
     },
 
     watch: {

@@ -6,6 +6,15 @@ async function get(path) {
     })
 }
 
+async function del(path, id) {
+    return new Promise(res => {
+        const config = {
+            method: 'DELETE'
+        }
+        fetch(HOST+path + "/" + id, config).then(response => response.json()).then(json => res(json));
+    })
+}
+
 async function post(path, body) {
     return new Promise(res => {
         const config = {
@@ -21,4 +30,4 @@ async function post(path, body) {
     })
 }
 
-export default {get, post}
+export default {get, post, del}

@@ -73,7 +73,7 @@ export default {
             this.hours = []
             for (let i = 0; i < 24; i++) {
                 if (i >= min && i < max) {
-                    let t = ((i < 9) ? `0${i}` : i) + ':00'
+                    let t = ((i <= 9) ? `0${i}` : i) + ':00'
                     this.hours.push(t)
                 }
             }

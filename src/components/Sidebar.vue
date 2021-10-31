@@ -7,7 +7,7 @@
             <v-list-item-title class="text-h7">
               Leandro Carlos
             </v-list-item-title>
-            <v-list-item-subtitle>leandrocoder@gmail.com</v-list-item-subtitle>
+            <v-list-item-subtitle>leandro@superbexperience.com</v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-action>

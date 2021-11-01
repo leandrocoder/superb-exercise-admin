@@ -44,16 +44,14 @@ export default {
             this.hours.push(t)
         }
 
-        let res = await this.$rest.get('/settings')
-        this.form = res
+        this.form = await this.$rest.get('/settings')
         this.loading = false
-
     },
 
     methods: {
         async save()
         {
-            await this.$rest.post('/settings', this.form)
+            await this.$rest.put('/settings', this.form)
             this.$router.push('/')
         }
     }

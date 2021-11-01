@@ -16,6 +16,20 @@ async function del(path, id) {
     })
 }
 
+async function put(path, body) {
+    return new Promise(res => {
+        const config = {
+            method: 'PUT',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }
+        fetch(HOST+path, config).then(response => response.json()).then(json => res(json));
+    })
+}
+
 async function post(path, body) {
     return new Promise(res => {
         const config = {
@@ -25,10 +39,9 @@ async function post(path, body) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(body)
-            // 'Content-Type': 'application/x-www-form-urlencoded',
         }
         fetch(HOST+path, config).then(response => response.json()).then(json => res(json));
     })
 }
 
-export default {get, post, del}
+export default {get, post, del, put}

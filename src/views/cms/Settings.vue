@@ -1,12 +1,12 @@
 <template>
-    <div class="settings" v-if="!loading">
+    <div class="settings">
         <div class="pageheader d-flex">
             <h1>Settings</h1>
             <v-spacer/>
         </div>
-        <v-card>
+        <v-card :loading="loading">
             <v-card-text>
-                <v-container>
+                <v-container  v-if="!loading">
                     <v-select :items="hours" v-model="form.openTime" label="Open Time"></v-select>
                     <v-select :items="hours" v-model="form.closeTime" label="Close Time"></v-select>
                     <div class="d-flex"><p style="margin:0; padding:0">Working days</p></div>
@@ -33,8 +33,8 @@ export default {
         weekDayNames: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         hours: [],
         form: {
-            openTime: "09:00", closeTime: "18:00",
-            openDays: [true, true, true, true, true, false, false],
+            openTime: "00:00", closeTime: "24:00",
+            openDays: [false, false, false, false, false, false, false],
         }
     }),
 

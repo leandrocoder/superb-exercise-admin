@@ -2,7 +2,7 @@
     <div class="sidebar elevation-2">
       <v-list-item-title class="text-h6"> Booking System</v-list-item-title>
       <v-list>
-        <v-list-item link @click="userOptions = !userOptions">
+        <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="text-h7">
               Leandro Carlos
@@ -16,7 +16,7 @@
           </v-list-item-action>
         </v-list-item>
       </v-list>
-
+        <!--
         <div v-if="userOptions">
             <v-divider></v-divider>
             <v-list-item link to="login">
@@ -29,7 +29,7 @@
                 </v-list-item-content>
             </v-list-item>
         </div>
-
+        -->
       <v-divider></v-divider>
       <v-list
         nav

@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import CMS from '../views/CMS.vue'
-import Login from '../views/Login.vue'
 
 import Bookings from '../views/cms/Bookings.vue'
 import Reservation from '../views/cms/Reservation.vue'
@@ -43,11 +42,6 @@ const routes = [
       }
       
     ]
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
   },
   {
     path: '*',

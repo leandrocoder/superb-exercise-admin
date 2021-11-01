@@ -1,20 +1,27 @@
 <template>
-    <div class="reservation" v-if="!loading">
+    <div class="reservation">
         <div class="pageheader d-flex">
             <h1>Reservation</h1>
             <v-spacer/>
         </div>
-        <v-card>
+        <v-card :loading="loading">
             <v-card-text>
                 <v-text-field label="Name" v-model="form.name"></v-text-field>
                 <v-text-field label="Phone Number" v-model="form.phone"></v-text-field>
                 <v-text-field label="Number of Chairs" v-model="form.chairs" type="number" :min="1" :max="1000" @blur="validateChairs"></v-text-field>
-                <v-text-field label="Date" v-model="form.date"></v-text-field>
-                <div class="d-flex"><p>Available Tables:</p></div>
-                <div class="d-flex flex-wrap">
-                    <div :class="{'mb-4':true, 'table':true, 'tableactive':h == form.hour}" v-for="h in hours" :key="h" @click="form.hour = h">
-                        <p>{{h}}</p>
+                <!-- <v-text-field label="Date" v-model="form.date"></v-text-field> -->
+                <date-picker :openDays="openDays" label="Date" v-model="form.date" @change="searchAvailableHours" />
+                <div v-if="hours == null">
+                    <v-progress-linear indeterminate />
+                </div>
+                <div v-else-if="hours && hours.length > 0">
+                    <div class="d-flex"><p>Available Tables:</p></div>
+                    <div class="d-flex flex-wrap">
+                    <div :class="{'hourbox':true, 'hourboxactive':form.hour==h.time, 'hourboxdisabled': h.tables <= 0}" v-for="h in hours" :key="h.time" @click="form.hour=h.time">{{h.time}}</div>
                     </div>
+                </div>
+                <div v-else>
+                    <div class="d-flex"><p>No available tables for this date</p></div>
                 </div>
                 <v-card-actions>
                     <v-spacer />
@@ -28,15 +35,21 @@
 
 <script>
 
+import DatePicker from '../../components/DatePicker.vue'
 
 export default {
     data: () => ({
         loading: true,
         form: {
-            name: "Leandro", phone: "+55 11988898193", date: "08-06-2022", hour: null, chairs: 1
+            name: "", phone: "", date: "", hour: null, chairs: 1
         },
-        hours: []
+        openDays:[],
+        hours: null
     }),
+
+    components: {
+        DatePicker
+    },
 
     created() {
         // fill all possible hours
@@ -50,7 +63,6 @@ export default {
     methods: {
 
         validateChairs() {
-            console.log('blur!')
             this.form.chairs = Math.ceil(this.form.chairs)
             if (this.form.chairs <= 0) this.form.chairs = 1
             if (this.form.chairs > 1000) this.form.chairs = 1000
@@ -64,24 +76,19 @@ export default {
 
         async loadData() {
             this.loading = true
-
             let settings = await this.$rest.get('/settings')
-            let min = this.hourToInt(settings.openTime)
-            let max = this.hourToInt(settings.closeTime)
-            console.log('settings', settings)
-
-            this.hours = []
-            for (let i = 0; i < 24; i++) {
-                if (i >= min && i < max) {
-                    let t = ((i <= 9) ? `0${i}` : i) + ':00'
-                    this.hours.push(t)
-                }
-            }
+            this.openDays = settings.openDays
             this.loading = false
+            await this.searchAvailableHours()
         },
 
+        async searchAvailableHours() {
+            this.hours = null
+			this.form.hour = null
+			this.hours = await this.$rest.get(`/hours/${this.form.date}`)
+		},
+
         async onClickSave() {
-            console.log(JSON.stringify(this.form))
             await this.$rest.post('/booking', this.form)
             this.$router.push('/')
         }
@@ -90,23 +97,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.table {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #ccc; 
-    margin-right: 0.5rem;
-    cursor: pointer;
-    p {
-        margin: 0;
-        padding: 0;
-        user-select: none;
-    }
+
+.hourbox {
+	cursor: pointer;
+	padding: 0.25rem 0.5rem;
+	margin: 0.5rem;
+	border: 1px solid #ccc;
 }
 
-.tableactive {
-    border: 1px solid #1976d2 ;
-    background-color: #1976d2;
-    p {
-        color: white ;
-    } 
+.hourboxactive {
+	background-color: #1976d2;
+	border: 1px solid #1976d2;
+	color: #fff;
+}
+
+.hourboxdisabled {
+	pointer-events: none;
+	background-color: #aaa;
+	border: 1px solid #aaa;
+	color: #fff;
 }
 </style>

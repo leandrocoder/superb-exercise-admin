@@ -1,47 +1,18 @@
 <template>
-    <div class="page" v-if="!loading">
+    <div class="page">
         <div class="pageheader d-flex">
-            <!--
-            <div>
-                <v-menu
-                    ref="menu1"
-                    v-model="datePickerActive"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    max-width="290px"
-                    min-width="auto"
-                    >
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                        v-model="dateFormatted"
-                        prepend-icon="mdi-calendar"
-                        v-bind="attrs"
-                        v-on="on"
-                        dense
-                        ></v-text-field>
-                    </template>
-                    <v-date-picker
-                        v-model="date"
-                        no-title
-                        @input="datePickerActive = false"
-                    ></v-date-picker>
-                </v-menu>
-            </div>
-            -->
             <h1>Bookings</h1>
             <v-spacer></v-spacer>
             <v-btn small to="/reservation" color="primary" class="ml-4">+ New Reservation</v-btn>
         </div>
-        <v-card class="elevation-1">
+        <v-card class="elevation-1" :loading="loading">
             <v-card-text>
                 <div class="d-flex listitem" v-for="(item, index) in bookings" :key="item.id">
                     <v-chip small class="mr-2">{{item.chairs}}</v-chip>
-                    <p class="mr-2">{{item.date}} {{item.hour}} - Leandro Carlos</p>
+                    <p class="mr-2">{{item.date}} {{item.hour}} - {{item.name}}</p>
                     <v-spacer />
                     <v-btn class="ml-2" small color="error" @click="remove(item)">Remove</v-btn>
                 </div>
-
             </v-card-text>
         </v-card>
     </div>

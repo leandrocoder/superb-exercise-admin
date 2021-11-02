@@ -23,7 +23,7 @@
                 <div v-else>
                     <div class="d-flex"><p>No available tables for this date</p></div>
                 </div>
-                <v-card-actions>
+                <v-card-actions class="mt-6">
                     <v-spacer />
                     <v-btn to="/">Cancel</v-btn>
                     <v-btn color="primary" @click="onClickSave">Save</v-btn>
